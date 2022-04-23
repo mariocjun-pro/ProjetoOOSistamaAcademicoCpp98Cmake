@@ -1,0 +1,14 @@
+//
+// Created by CIANDT\mariocj on 11/04/22.
+//
+
+#ifndef PROJETOOOSISTEMAACADEMICOCPP98_DATAATUAL_H
+#define PROJETOOOSISTEMAACADEMICOCPP98_DATAATUAL_H
+
+class DataAtual {
+public:
+    void imprimeDataAtual();
+};
+
+
+#endif //PROJETOOOSISTEMAACADEMICOCPP98_DATAATUAL_H

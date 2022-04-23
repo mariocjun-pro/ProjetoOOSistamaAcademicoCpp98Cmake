@@ -1,0 +1,149 @@
+@startuml
+'https://plantuml.com/class-diagram
+class Pessoa
+class Aluno
+class Professor
+class Universidade
+class Departamento
+class Disciplina
+
+class Pessoa {
+    # idadePessoa : int
+    # diaPessoa : int
+    # mesPessoa : int
+    # anoPessoa : int
+    # idPessoa : int
+    # nomePessoa : char[50]
+
+    + <<create>>Pessoa(diaNP : int, mesNP : int, anoNP : int, nomeNP : const char*)
+    + <<create>>Pessoa()
+    + <<destroy>>Pessoa() : virtual
+    + getIdPessoa() : int
+    + getNome() : char*
+    + getIdade() : int
+    + setNome(nomeNP : const char*) : void
+    + setIdPessoa(idPessoa : int) : void
+    + imprimeIdade() : void
+    + calculaIdade(diaAT : int, mesAT : int, anoAT: int) : void
+    + inicializa(diaNP : int, mesNP : int, anoNP : int, nomeNP : const char*) : void
+}
+
+class Professor {
+    - profUniversidade : Universidade*
+    - profDepartamento : Departamento*
+
+    + <<create>> Professor(diaNascProf : int, mesNascProf : int, anoNascProf : int, nomeProf : const char*)
+    + <<create>> Professor()
+    + <<destroy>> Professor()
+    + setProfUniversidade(novaProfUniversidade : Universidade*) : void
+    + setProfDepartamento(novoProfDepartamento : Departamento*) : void
+    + imprimeLocalTrabalho() : void
+    + imprimeDepartamentoProfessor() : void
+}
+
+class Aluno {
+    + RA : int
+
+    + <<create>> Aluno(RA : int)
+    + <<destroy>> Aluno() : virtual
+    + getRA() const : int
+    + setRA(RA : int) : void
+
+}
+
+class AlunoRel {
+    - ponteiroAluno : Aluno*
+    + ponteiroProxAluno : AlunoRel*
+    + ponteiroAnteAluno : AlunoRel*
+
+    + <<create>> AlunoRel()
+    + <<destroy>> AlunoRel() : virtual
+    + getAlunoRel() : Aluno*
+    + setAlunoRel(novoPonteiroAluno : Aluno*) : void
+    + getNomeAlunoRel() : char*
+}
+
+class Departamento {
+    - idDepartamento : int
+    - nomeDepartamento : char[30]
+
+    + <<create>> Departamento(idDepartamento : int)
+    + <<destroy>> Departamento() : virtual
+    + getNomeDepartamento() : char*
+    + getIdDepartamento() : int
+    + setIdDepartamento(idDepartamento : int)
+    + setNomeDepartamento() : void
+}
+
+class Universidade {
+    - nomeUni : char[30]
+    - departamentosList : list<Departamento*>
+    + <<create>> Universidade()
+    + <<destroy>> Universidade() : virtual
+    + getNomeUni() : char*
+    + setNomeUni() : void
+    + setDepartamentoUniList(novoDepartamentoUniList : list<Departamento*>) : void
+}
+
+class Disciplina {
+    - idDisciplina : int
+    - nomeDisciplina : char[50]
+    - areaDisciplina : char[150]
+    - numAlunosDisciplina : int
+    - contAlunosDisciplina : int
+    - ponteiroDepartamentoAssociadoDisciplina : Departamento*
+    - ponteiroAlunoRelPrimeiroDisciplina : AlunoRel*
+    - ponteiroAlunoRelAtualDisciplina : AlunoRel*
+    + ponteiroDisciplinaProxima : Disciplina*
+    + ponteiroDisciplinaAtual : Disciplina*
+
+    - <<create>> Disciplina(numAlunosDisciplina : int, nomeDisciplina : const char*, areaDisciplina : const char*)
+    - <<destroy>> Disciplina()
+    + <<create>> Disciplina()
+    + getNomeDisciplina() : char*
+    + getIdDisciplina() : int
+    + setNomeDisciplina(nomeDisciplina : const char*) : void
+    + setIdDisciplina(idDisciplina : int) : void
+    + setDepartamentoDisciplina(novoDepartamentoDisciplina : Departamento*) : void
+    + getDepartamentoDisciplina() : Departamento*
+    + incluirAluno(ponteiroAluno : Aluno*) : void
+    + listarAluno() : void
+    + listarAlunoV2 : void
+
+}
+
+class DisciplinaRel {
+
+}
+
+class ListaAlunos {
+
+}
+
+Pessoa <|-down- Aluno : "Herda"
+Pessoa <|-- Professor : "      Herda"
+
+Aluno "1" <-up- "1..*" AlunoRel : "Tratar Aluno na Lista"
+Aluno "1..*" <-- "1..*" Disciplina : "Cursar"
+(Aluno, Disciplina) <|-- AlunoRel
+(Aluno, Disciplina) <|-- ListaAlunos
+
+note top of AlunoRel : \n Isto é uma classe de Associação que serve \n para implementar uma dada relação modelada \n
+
+AlunoRel "0..1" -up-> "0..1" AlunoRel  : "Conhece Proximo                    "
+AlunoRel "0..1" <-up- "0..1" AlunoRel  : "Conhece Anterior"
+
+ListaAlunos "1" <-right- "0..1" AlunoRel : "      Conhecer Primeiro     "
+ListaAlunos "1" <-right- "0..1" AlunoRel : "      Conhece Anterior     "
+Disciplina "1" *-right-> "1" ListaAlunos
+
+DisciplinaRel -down- Disciplina
+
+Departamento "1" <-right- "1..*" Professor : "Conhece"
+Departamento "1" *-up- "1..*" Disciplina : "Agregacao-forte (composicao)"
+
+Universidade "1" <-up- "1..*" Professor : "Conhece"
+Universidade "1" o-left- "1..50" Departamento : "Agregacao-simples (ponteiros)  "
+
+
+@enduml
